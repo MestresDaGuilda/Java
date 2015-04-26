@@ -1,0 +1,80 @@
+package onlinejudge;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class IDCodes {
+  static ArrayList<String> Sucessores = new ArrayList<>();
+	
+	static String novoCodigo(String codigo) {
+		String novo = new String();
+		char[] mutante = new char[codigo.length()];
+		char aux;
+		boolean marcador = false;
+		int indicePasso2 = 0;
+		
+		// Passa os caracteres da string para um array de char
+		for (int i = 0; i < codigo.length(); i++) {
+			mutante[i] = codigo.charAt(i);
+		}
+		
+		// Passo 1
+		for (int i = mutante.length -1; i > 0; i--) {
+			for (int j = i-1; j >= 0; j--) {
+				if (mutante[i] > mutante[j]) {
+					aux = mutante[i];
+					mutante[i] = mutante[j];
+					mutante[j] = aux;
+					
+					// Quebra o loop quando o passo 1 for concluido e marca a posicao do caractere trocado
+					marcador = true;
+					indicePasso2 = j;
+					break;
+				}
+			}
+			// Quebra o loop quando o passo 1 for concluido
+			if (marcador) {
+				break;
+			}
+		}
+		
+		// Passo 2
+		if (marcador) {
+			for (int i = mutante.length -1; i > indicePasso2 +1; i--) {
+				for (int j = i-1; j > indicePasso2; j--) {
+					if (mutante[i] < mutante[j]) {
+						aux = mutante[i];
+						mutante[i] = mutante[j];
+						mutante[j] = aux;
+					}
+				}
+			}
+			
+			// Passa o array de char contendo o novo codigo para a string <novo>
+			for (int i = 0; i < codigo.length(); i++) {
+				novo = novo + mutante[i];
+			}
+		} else {
+			novo = "No Successor";
+		}
+		
+		return novo;
+	}
+	
+	public static void main(String[] args) {
+		
+		Scanner input = new Scanner(System.in);
+		String codigo = new String();
+		
+		codigo = input.next();
+		while (!codigo.contentEquals("#")) {
+			Sucessores.add(novoCodigo(codigo));
+			codigo = input.next();
+		}
+		
+		for (String val: Sucessores) {
+			System.out.println(val);
+		}
+		input.close();
+	}
+
+}
